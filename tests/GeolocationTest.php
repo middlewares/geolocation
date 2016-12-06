@@ -12,12 +12,12 @@ class GeolocationTest extends \PHPUnit_Framework_TestCase
     {
         $request = Factory::createServerRequest(['REMOTE_ADDR' => '123.9.34.23']);
 
-        $response = (new Dispatcher([
+        $response = Dispatcher::run([
             new Geolocation(),
             function ($request) {
                 echo $request->getAttribute('client-location')->first()->getCountry();
             },
-        ]))->dispatch($request);
+        ], $request);
 
         $this->assertInstanceOf('Psr\\Http\\Message\\ResponseInterface', $response);
         $this->assertEquals('China', (string) $response->getBody());
