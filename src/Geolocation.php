@@ -1,12 +1,15 @@
 <?php
+declare(strict_types = 1);
 
 namespace Middlewares;
 
 use Geocoder\Geocoder;
-use Geocoder\Provider\FreeGeoIp;
+use Geocoder\Provider\FreeGeoIp\FreeGeoIp;
+use Geocoder\Provider\Provider;
+use Geocoder\Query\GeocodeQuery;
+use Http\Adapter\Guzzle6\Client;
 use Interop\Http\Server\MiddlewareInterface;
 use Interop\Http\Server\RequestHandlerInterface;
-use Ivory\HttpAdapter\FopenHttpAdapter;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -28,9 +31,7 @@ class Geolocation implements MiddlewareInterface
     private $attribute = 'client-location';
 
     /**
-     * Constructor. Set the geocoder instance.
-     *
-     * @param null|Geocoder $geocoder
+     * Set the geocoder instance.
      */
     public function __construct(Geocoder $geocoder = null)
     {
@@ -39,12 +40,8 @@ class Geolocation implements MiddlewareInterface
 
     /**
      * Set the attribute name to get the client ip.
-     *
-     * @param string $ipAttribute
-     *
-     * @return self
      */
-    public function ipAttribute($ipAttribute)
+    public function ipAttribute(string $ipAttribute): self
     {
         $this->ipAttribute = $ipAttribute;
 
@@ -53,12 +50,8 @@ class Geolocation implements MiddlewareInterface
 
     /**
      * Set the attribute name to store the geolocation info.
-     *
-     * @param string $attribute
-     *
-     * @return self
      */
-    public function attribute($attribute)
+    public function attribute(string $attribute): self
     {
         $this->attribute = $attribute;
 
@@ -67,19 +60,14 @@ class Geolocation implements MiddlewareInterface
 
     /**
      * Process a server request and return a response.
-     *
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     *
-     * @return ResponseInterface
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $ip = $this->getIp($request);
 
         if (!empty($ip)) {
             $geocoder = $this->geocoder ?: self::createGeocoder();
-            $address = $geocoder->geocode($ip);
+            $address = $geocoder->geocodeQuery(GeocodeQuery::create($ip));
             $request = $request->withAttribute($this->attribute, $address);
         }
 
@@ -88,12 +76,8 @@ class Geolocation implements MiddlewareInterface
 
     /**
      * Get the client ip.
-     *
-     * @param ServerRequestInterface $request
-     *
-     * @return string
      */
-    private function getIp(ServerRequestInterface $request)
+    private function getIp(ServerRequestInterface $request): string
     {
         $server = $request->getServerParams();
 
@@ -105,12 +89,10 @@ class Geolocation implements MiddlewareInterface
     }
 
     /**
-     * Generate a default geocoder.
-     *
-     * @return Geocoder
+     * Generate the default geocoder provider.
      */
-    private static function createGeocoder()
+    private static function createGeocoder(): Provider
     {
-        return new FreeGeoIp(new FopenHttpAdapter());
+        return new FreeGeoIp(new Client());
     }
 }
