@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Middlewares;
 
-use Geocoder\Geocoder;
 use Geocoder\Provider\FreeGeoIp\FreeGeoIp;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
@@ -16,9 +15,9 @@ use Psr\Http\Message\ServerRequestInterface;
 class Geolocation implements MiddlewareInterface
 {
     /**
-     * @var Geocoder
+     * @var Provider
      */
-    private $geocoder;
+    private $provider;
 
     /**
      * @var string|null
@@ -31,11 +30,11 @@ class Geolocation implements MiddlewareInterface
     private $attribute = 'client-location';
 
     /**
-     * Set the geocoder instance.
+     * Set the provider instance.
      */
-    public function __construct(Geocoder $geocoder = null)
+    public function __construct(Provider $provider = null)
     {
-        $this->geocoder = $geocoder;
+        $this->provider = $provider;
     }
 
     /**
@@ -66,8 +65,8 @@ class Geolocation implements MiddlewareInterface
         $ip = $this->getIp($request);
 
         if (!empty($ip)) {
-            $geocoder = $this->geocoder ?: self::createGeocoder();
-            $address = $geocoder->geocodeQuery(GeocodeQuery::create($ip));
+            $provider = $this->provider ?: self::createProvider();
+            $address = $provider->geocodeQuery(GeocodeQuery::create($ip));
             $request = $request->withAttribute($this->attribute, $address);
         }
 
@@ -89,9 +88,9 @@ class Geolocation implements MiddlewareInterface
     }
 
     /**
-     * Generate the default geocoder provider.
+     * Generate the default provider.
      */
-    private static function createGeocoder(): Provider
+    private static function createProvider(): Provider
     {
         return new FreeGeoIp(new Client());
     }
