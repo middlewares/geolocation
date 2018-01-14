@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Middlewares\Tests;
 
@@ -13,21 +14,42 @@ class GeolocationTest extends TestCase
 {
     public function testGeolocation()
     {
-        $request = Factory::createServerRequest(['REMOTE_ADDR' => '123.9.34.23']);
-
         //do not use http due travis:
         //GuzzleHttp\Exception\ConnectException: cURL error 35: gnutls_handshake() failed:
         //Handshake failed (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)
         $geocoder = new FreeGeoIp(new Client(), 'http://freegeoip.net/json/%s');
 
-        $response = Dispatcher::run([
-            new Geolocation($geocoder),
-            function ($request) {
-                echo $request->getAttribute('client-location')->first()->getCountry();
-            },
-        ], $request);
+        $response = Dispatcher::run(
+            [
+                new Geolocation($geocoder),
+                function ($request) {
+                    echo $request->getAttribute('client-location')->first()->getCountry();
+                },
+            ],
+            Factory::createServerRequest(['REMOTE_ADDR' => '123.9.34.23'])
+        );
 
-        $this->assertInstanceOf('Psr\\Http\\Message\\ResponseInterface', $response);
+        $this->assertEquals('China', (string) $response->getBody());
+    }
+
+    public function testAttribute()
+    {
+        $geocoder = new FreeGeoIp(new Client(), 'http://freegeoip.net/json/%s');
+
+        $response = Dispatcher::run(
+            [
+                (new Geolocation($geocoder))
+                    ->attribute('foo')
+                    ->ipAttribute('bar'),
+
+                function ($request) {
+                    echo $request->getAttribute('foo')->first()->getCountry();
+                },
+            ],
+            Factory::createServerRequest()
+                ->withAttribute('bar', '123.9.34.23')
+        );
+
         $this->assertEquals('China', (string) $response->getBody());
     }
 }
