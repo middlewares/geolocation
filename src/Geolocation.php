@@ -7,10 +7,10 @@ use Geocoder\Provider\FreeGeoIp\FreeGeoIp;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Http\Adapter\Guzzle6\Client;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class Geolocation implements MiddlewareInterface
 {
