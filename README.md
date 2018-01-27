@@ -27,7 +27,7 @@ composer require middlewares/geolocation
 
 ```php
 $dispatcher = new Dispatcher([
-	new Middlewares\Geolocation(),
+    new Middlewares\Geolocation(),
 
     function ($request) {
         //Get the client location
