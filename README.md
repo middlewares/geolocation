@@ -14,6 +14,8 @@ Middleware to geolocate the client using the ip address and [Geocoder](https://g
 * PHP >= 7.0
 * A [PSR-7 http library](https://github.com/middlewares/awesome-psr15-middlewares#psr-7-implementations)
 * A [PSR-15 middleware dispatcher](https://github.com/middlewares/awesome-psr15-middlewares#dispatcher)
+* A [PHP-HTTP adapter](http://docs.php-http.org/en/latest/clients.html), for example [Guzzle6](https://github.com/php-http/guzzle6-adapter)
+* A [Geocoder ip-based provider](https://github.com/geocoder-php/Geocoder#ip)
 
 ## Installation
 
