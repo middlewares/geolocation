@@ -26,7 +26,7 @@ class GeolocationTest extends TestCase
                     echo $request->getAttribute('client-location')->first()->getCountry();
                 },
             ],
-            Factory::createServerRequest(['REMOTE_ADDR' => '123.9.34.23'])
+            Factory::createServerRequest('GET', '/', ['REMOTE_ADDR' => '123.9.34.23'])
         );
 
         $this->assertEquals('China', (string) $response->getBody());
@@ -46,7 +46,7 @@ class GeolocationTest extends TestCase
                     echo $request->getAttribute('foo')->first()->getCountry();
                 },
             ],
-            Factory::createServerRequest()
+            Factory::createServerRequest('GET', '/')
                 ->withAttribute('bar', '123.9.34.23')
         );
 
