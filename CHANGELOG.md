@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0] - 2018-08-04
+
+### Added
+
+- PSR-17 support
+
+### Changed
+
+- The argument to pass the `Geocoder\Provider\Provider` in the constructor is mandatory. Removed the FreeGeoIp default provider because it requires credentials.
+
 ## [1.0.0] - 2018-01-27
 
 ### Added
@@ -58,6 +68,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 First version
 
 
+[2.0.0]: https://github.com/middlewares/geolocation/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/middlewares/geolocation/compare/v0.5.0...v1.0.0
 [0.5.0]: https://github.com/middlewares/geolocation/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/middlewares/geolocation/compare/v0.3.0...v0.4.0

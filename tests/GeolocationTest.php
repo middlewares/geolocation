@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace Middlewares\Tests;
 
+use Eloquent\Phony\Phpunit\Phony;
+use Geocoder\Model\Address;
+use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\FreeGeoIp\FreeGeoIp;
 use Http\Adapter\Guzzle6\Client;
 use Middlewares\Geolocation;
@@ -12,16 +15,21 @@ use PHPUnit\Framework\TestCase;
 
 class GeolocationTest extends TestCase
 {
+    private static function getMiddleware()
+    {
+        $container = Phony::partialMock(Geolocation::class, [new FreeGeoIp(new Client())]);
+        $container->getAddress->with('123.9.34.23')->returns(new AddressCollection([
+            Address::createFromArray(['country' => 'China']),
+        ]));
+
+        return $container->get();
+    }
+
     public function testGeolocation()
     {
-        //do not use http due travis:
-        //GuzzleHttp\Exception\ConnectException: cURL error 35: gnutls_handshake() failed:
-        //Handshake failed (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)
-        $geocoder = new FreeGeoIp(new Client(), 'http://freegeoip.net/json/%s');
-
         $response = Dispatcher::run(
             [
-                new Geolocation($geocoder),
+                $this->getMiddleware(),
                 function ($request) {
                     echo $request->getAttribute('client-location')->first()->getCountry();
                 },
@@ -38,7 +46,7 @@ class GeolocationTest extends TestCase
 
         $response = Dispatcher::run(
             [
-                (new Geolocation($geocoder))
+                $this->getMiddleware()
                     ->attribute('foo')
                     ->ipAttribute('bar'),
 

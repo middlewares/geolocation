@@ -3,10 +3,9 @@ declare(strict_types = 1);
 
 namespace Middlewares;
 
-use Geocoder\Provider\FreeGeoIp\FreeGeoIp;
+use Geocoder\Collection;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
-use Http\Adapter\Guzzle6\Client;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -32,7 +31,7 @@ class Geolocation implements MiddlewareInterface
     /**
      * Set the provider instance.
      */
-    public function __construct(Provider $provider = null)
+    public function __construct(Provider $provider)
     {
         $this->provider = $provider;
     }
@@ -65,12 +64,19 @@ class Geolocation implements MiddlewareInterface
         $ip = $this->getIp($request);
 
         if (!empty($ip)) {
-            $provider = $this->provider ?: self::createProvider();
-            $address = $provider->geocodeQuery(GeocodeQuery::create($ip));
+            $address = $this->getAddress($ip);
             $request = $request->withAttribute($this->attribute, $address);
         }
 
         return $handler->handle($request);
+    }
+
+    /**
+     * Get the address of an ip
+     */
+    protected function getAddress(string $ip): Collection
+    {
+        return $this->provider->geocodeQuery(GeocodeQuery::create($ip));
     }
 
     /**
@@ -85,13 +91,5 @@ class Geolocation implements MiddlewareInterface
         }
 
         return isset($server['REMOTE_ADDR']) ? $server['REMOTE_ADDR'] : '';
-    }
-
-    /**
-     * Generate the default provider.
-     */
-    private static function createProvider(): Provider
-    {
-        return new FreeGeoIp(new Client());
     }
 }

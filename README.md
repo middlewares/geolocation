@@ -26,8 +26,10 @@ composer require middlewares/geolocation
 ## Example
 
 ```php
+$freeGeoIpProvider = new Geocoder\Provider\FreeGeoIp($adapter);
+
 $dispatcher = new Dispatcher([
-    new Middlewares\Geolocation(),
+    new Middlewares\Geolocation($freeGeoIpProvider),
 
     function ($request) {
         //Get the client location
@@ -42,9 +44,9 @@ $response = $dispatcher->dispatch(new ServerRequest());
 
 ## Options
 
-#### `__construct(Geocoder\Geocoder $geocoder = null)`
+#### `__construct(Geocoder\Provider\Provider $provider)`
 
-The geocoder object used to geolocate the client. If it's not provided, use a generic `Geocoder\Provider\FreeGeoIp` instance.
+The geocoder provider used to geolocate the client.
 
 It's also recommended to configure it to [caching responses.](https://github.com/geocoder-php/Geocoder/blob/master/docs/cookbook/cache.md)
 
