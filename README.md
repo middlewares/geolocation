@@ -69,9 +69,7 @@ The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
 [ico-ga]: https://github.com/middlewares/geolocation/workflows/testing/badge.svg
 [ico-downloads]: https://img.shields.io/packagist/dt/middlewares/geolocation.svg?style=flat-square
-[ico-sensiolabs]: https://img.shields.io/sensiolabs/i/b6c8bd3a-b3da-45ec-b2ac-9d27ae390b1b.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/middlewares/geolocation
-[link-scrutinizer]: https://scrutinizer-ci.com/g/middlewares/geolocation
 [link-downloads]: https://packagist.org/packages/middlewares/geolocation
 [link-sensiolabs]: https://insight.sensiolabs.com/projects/b6c8bd3a-b3da-45ec-b2ac-9d27ae390b1b
