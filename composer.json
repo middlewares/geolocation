@@ -19,20 +19,20 @@
     },
     "require": {
         "php": "^7.2 || ^8.0",
-        "willdurand/geocoder": "^4.0",
-        "php-http/message": "^1.6",
-        "psr/http-server-middleware": "^1.0"
+        "willdurand/geocoder": "^4",
+        "php-http/message": "^1",
+        "psr/http-server-middleware": "^1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8|^9",
-        "friendsofphp/php-cs-fixer": "^2.0",
-        "squizlabs/php_codesniffer": "^3.0",
-        "middlewares/utils": "^2.1",
-        "eloquent/phony-phpunit": "^6.0|^7.0",
-        "php-http/guzzle6-adapter": "^1.1",
-        "geocoder-php/free-geoip-provider": "^4.1",
-        "phpstan/phpstan": "^0.12",
-        "laminas/laminas-diactoros": "^2.3"
+        "phpunit/phpunit": "^8 || ^9",
+        "friendsofphp/php-cs-fixer": "^3",
+        "squizlabs/php_codesniffer": "^3",
+        "middlewares/utils": "^2 || ^3 || ^4",
+        "php-http/guzzle7-adapter": "^1",
+        "geocoder-php/free-geoip-provider": "^4",
+        "phpstan/phpstan": "^1 || ^2",
+        "laminas/laminas-diactoros": "^2 || ^3",
+        "oscarotero/php-cs-fixer-config": "^2"
     },
     "autoload": {
         "psr-4": {
@@ -51,5 +51,10 @@
         "test": "phpunit",
         "coverage": "phpunit --coverage-text",
         "coverage-html": "phpunit --coverage-html=coverage"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": false
+        }
     }
 }
