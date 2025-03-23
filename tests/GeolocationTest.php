@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace Middlewares\Tests;
 
-use Eloquent\Phony\Phpunit\Phony;
+use Geocoder\Collection;
 use Geocoder\Model\Address;
 use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\FreeGeoIp\FreeGeoIp;
-use Http\Adapter\Guzzle6\Client;
+use Http\Adapter\Guzzle7\Client;
 use Middlewares\Geolocation;
 use Middlewares\Utils\Dispatcher;
 use Middlewares\Utils\Factory;
@@ -15,17 +15,24 @@ use PHPUnit\Framework\TestCase;
 
 class GeolocationTest extends TestCase
 {
+    /**
+     * @return Geolocation
+     */
     private static function getMiddleware()
     {
-        $container = Phony::partialMock(Geolocation::class, [new FreeGeoIp(new Client())]);
-        $container->getAddress->with('123.9.34.23')->returns(new AddressCollection([
-            Address::createFromArray(['country' => 'China']),
-        ]));
+        return new class(new FreeGeoIp(new Client())) extends Geolocation {
+            protected function getAddress(string $ip): Collection
+            {
+                assert($ip, '123.9.34.23');
 
-        return $container->get();
+                return new AddressCollection([
+                    Address::createFromArray(['country' => 'China']),
+                ]);
+            }
+        };
     }
 
-    public function testGeolocation()
+    public function testGeolocation(): void
     {
         $response = Dispatcher::run(
             [
@@ -40,7 +47,7 @@ class GeolocationTest extends TestCase
         $this->assertEquals('China', (string) $response->getBody());
     }
 
-    public function testAttribute()
+    public function testAttribute(): void
     {
         $geocoder = new FreeGeoIp(new Client(), 'http://freegeoip.net/json/%s');
 
