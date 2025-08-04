@@ -19,7 +19,7 @@
     },
     "require": {
         "php": "^7.2 || ^8.0",
-        "willdurand/geocoder": "^4",
+        "willdurand/geocoder": "^4 || ^5",
         "php-http/message": "^1",
         "psr/http-server-middleware": "^1"
     },
