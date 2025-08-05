@@ -68,6 +68,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 0.1.0 - 2016-10-10
 First version
 
+[3.2.0]: https://github.com/middlewares/geolocation/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/middlewares/geolocation/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/middlewares/geolocation/compare/v2.0.0...v3.0.0
 [2.0.0]: https://github.com/middlewares/geolocation/compare/v1.0.0...v2.0.0
